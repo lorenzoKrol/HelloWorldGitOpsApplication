@@ -52,8 +52,10 @@ jobs:
           file: ./Dockerfile
           push: true
           tags: ${{ secrets.DOCKER_USERNAME }}/hello-world-flask:${{ github.sha }}
+          
   update-helm-values:
     runs-on: ubuntu-latest
+    needs: push
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -65,12 +67,12 @@ jobs:
         run: |
           sed -i 's/^ *tag: .*/tag: "${{ github.sha }}"/' values.yaml
 
-        - name: Commit and push changes to infrastructure repository
-          run: |
-            git config --local user.email "lorenzokrol2000@gmail.com"
-            git config --local user.name "lorenzoKrol"
-            git add values.yaml
-            git commit -m "Update image tag to ${{ github.sha }}"
-            git push origin main
+      - name: Commit and push changes to infrastructure repository
+        run: |
+          git config --local user.email "lorenzokrol2000@gmail.com"
+          git config --local user.name "lorenzoKrol"
+          git add values.yaml
+          git commit -m "Update image tag to ${{ github.sha }}"
+          git push origin main
 
         
