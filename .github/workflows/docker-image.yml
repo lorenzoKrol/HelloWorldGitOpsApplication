@@ -69,4 +69,5 @@ jobs:
           propertyPath: 'image.tag'
           value: ${{ github.sha }}
           repository: lorenzoKrol/HelloWorldGitOpsInfra
-          message: 'Update Image Version to ${{ steps.image.outputs.version }}'
+          message: 'Update Image Version to ${{ github.sha }}'
+          createPR: false
