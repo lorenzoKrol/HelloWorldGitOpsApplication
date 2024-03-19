@@ -68,7 +68,6 @@ jobs:
           valueFile: 'values.yaml'
           propertyPath: 'image.tag'
           value: ${{ github.sha }}
-          repository: lorenzoKrol/HelloWorldGitOpsInfra
           message: 'Update Image Version to ${{ github.sha }}'
-          createPR: false
+          createPR: 'false'
           token: ${{ secrets.GHA_TOKEN }}
