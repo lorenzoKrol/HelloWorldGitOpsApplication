@@ -68,6 +68,4 @@ jobs:
           valueFile: 'values.yaml'
           propertyPath: 'image.tag'
           value: ${{ github.sha }}
-          message: 'Update Image Version to ${{ github.sha }}'
-          createPR: 'false'
-          token: ${{ secrets.GHA_TOKEN }}
+          commitChange: false
