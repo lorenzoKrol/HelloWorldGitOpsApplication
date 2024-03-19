@@ -72,6 +72,6 @@ jobs:
           message: 'Update Image Version to ${{ github.sha }}'
           token: ${{ secrets.GHA_TOKEN }}
           repository: lorenzoKrol/HelloWorldGitOpsInfra
-          createPR: 'true'
+          createPR: 'false'
 
           
