@@ -58,23 +58,15 @@ jobs:
       needs: push
       steps:
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
-          repository: lorenzoKrol/HelloWorldGitOpsInfra   # Specify the repository containing your Helm values file
-          ref: master                   # Adjust the branch as needed
-        
-      - name: Read commit ID
-        id: commit_id
-        run: echo "::set-output name=commit_id::$(git rev-parse --short HEAD)"
+          repository: lorenzoKrol/HelloWorldGitOpsInfra
 
-      - name: Update Helm values file
-        run: |
-          sed -i "s/tag: \"latest\"/tag: \"${{ steps.commit_id.outputs.commit_id }}\"/g" values.yaml
-
-      - name: Commit and push changes
-        run: |
-          git config --local user.email "action@github.com"
-          git config --local user.name "GitHub Action"
-          git add values.yaml
-          git commit -m "Update image tag to commit ID"
-          git push origin master
+      - name: Update Image Version in the related HelmChart values.yaml
+        uses: fjogeleit/yaml-update-action@main
+        with:
+          valueFile: 'values.yaml'
+          propertyPath: 'image.tag'
+          value: ${{ github.sha }}
+          repository: lorenzoKrol/HelloWorldGitOpsInfra
+          message: 'Update Image Version to ${{ steps.image.outputs.version }}'
