@@ -15,18 +15,16 @@ jobs:
         with:
           repository: lorenzoKrol/HelloWorldGitOpsInfra
           token: ${{ secrets.GHA_TOKEN }}
-          path: infrastructure
+          
+      - name: Update image tag in values.yaml
+        run: |
+          sed -i 's/^ *tag: .*/tag: "${{ github.sha }}"/' values.yaml
 
-
-      - name: Update Image Version in the related HelmChart values.yaml
-        uses: fjogeleit/yaml-update-action@main
-        with:
-          valueFile: 'values.yaml'
-          propertyPath: 'image.tag'
-          value: ${{ github.sha }}
-          message: 'Update Image Version to ${{ github.sha }}'
-          token: ${{ secrets.GHA_TOKEN }}
-          repository: lorenzoKrol/HelloWorldGitOpsInfra
-          createPR: 'false'
-          workDir: infrastructure
+      - name: Commit and push changes to infrastructure repository
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add values.yaml
+          git commit -m "Update image tag to ${{ github.sha }}"
+          git push https://$GITHUB_ACTOR:$GITHUB_TOKEN@github.com/lorenzoKrol/HelloWorldGitOpsInfra.git HEAD:master
 
