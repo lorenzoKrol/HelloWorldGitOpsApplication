@@ -1,0 +1,29 @@
+name: Build and Push Docker Image
+
+on:
+  push:
+    branches: [ "master" ]
+  pull_request:
+    branches: [ "master" ]
+
+jobs:
+  update-helm-values:
+    runs-on: ubuntu-latest
+    needs: push
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          repository: lorenzoKrol/HelloWorldGitOpsInfra
+          token: ${{ secrets.GHA_TOKEN }}
+
+      - name: Update Image Version in the related HelmChart values.yaml
+        uses: fjogeleit/yaml-update-action@main
+        with:
+          valueFile: 'values.yaml'
+          propertyPath: 'image.tag'
+          value: ${{ github.sha }}
+          message: 'Update Image Version to ${{ github.sha }}'
+          token: ${{ secrets.GHA_TOKEN }}
+          repository: lorenzoKrol/HelloWorldGitOpsInfra
+          createPR: 'false'
