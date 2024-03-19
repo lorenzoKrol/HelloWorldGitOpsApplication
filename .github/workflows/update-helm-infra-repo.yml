@@ -15,6 +15,8 @@ jobs:
         with:
           repository: lorenzoKrol/HelloWorldGitOpsInfra
           token: ${{ secrets.GHA_TOKEN }}
+          path: infrastructure
+
 
       - name: Update Image Version in the related HelmChart values.yaml
         uses: fjogeleit/yaml-update-action@main
@@ -26,3 +28,5 @@ jobs:
           token: ${{ secrets.GHA_TOKEN }}
           repository: lorenzoKrol/HelloWorldGitOpsInfra
           createPR: 'false'
+          workDir: infrastructure
+
