@@ -58,7 +58,7 @@ jobs:
       needs: push
       steps:
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           repository: lorenzoKrol/HelloWorldGitOpsInfra
           token: ${{ secrets.GHA_TOKEN }}
@@ -72,6 +72,6 @@ jobs:
           message: 'Update Image Version to ${{ github.sha }}'
           token: ${{ secrets.GHA_TOKEN }}
           repository: lorenzoKrol/HelloWorldGitOpsInfra
-          createPR: 'false'
+          createPR: 'true'
 
           
