@@ -2,7 +2,7 @@ replicaCount: 1
 image:
   repository: lordflenzo/hello-world-flask
   pullPolicy: IfNotPresent
-  tag: 1e31a04c310bee5994f72175f984eba75bbd4ecd
+  tag: b755c620a85184a95ecdd83392f6acfe0f1b9379
 imagePullSecrets: []
 nameOverride: ''
 fullnameOverride: ''
