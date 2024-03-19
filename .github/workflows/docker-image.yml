@@ -52,3 +52,29 @@ jobs:
           file: ./Dockerfile
           push: true
           tags: ${{ secrets.DOCKER_USERNAME }}/hello-world-flask:${{ github.sha }}
+
+  update-helm-values:
+      runs-on: ubuntu-latest
+    
+      steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+        with:
+          repository: HelloWorldGitOpsInfra   # Specify the repository containing your Helm values file
+          ref: master                   # Adjust the branch as needed
+        
+      - name: Read commit ID
+        id: commit_id
+        run: echo "::set-output name=commit_id::$(git rev-parse --short HEAD)"
+
+      - name: Update Helm values file
+        run: |
+          sed -i "s/tag: \"latest\"/tag: \"${{ steps.commit_id.outputs.commit_id }}\"/g" values.yaml
+
+      - name: Commit and push changes
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add values.yaml
+          git commit -m "Update image tag to commit ID"
+          git push origin master
