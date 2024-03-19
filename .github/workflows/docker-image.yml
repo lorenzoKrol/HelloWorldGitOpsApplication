@@ -55,12 +55,12 @@ jobs:
 
   update-helm-values:
       runs-on: ubuntu-latest
-    
+      needs: push
       steps:
       - name: Checkout code
         uses: actions/checkout@v2
         with:
-          repository: HelloWorldGitOpsInfra   # Specify the repository containing your Helm values file
+          repository: lorenzoKrol/HelloWorldGitOpsInfra   # Specify the repository containing your Helm values file
           ref: master                   # Adjust the branch as needed
         
       - name: Read commit ID
