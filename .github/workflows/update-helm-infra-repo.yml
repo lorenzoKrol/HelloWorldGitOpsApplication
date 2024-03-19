@@ -26,5 +26,5 @@ jobs:
           git config --local user.name "lorenzoKrol"
           git add values.yaml
           git commit -m "Update image tag to ${{ github.sha }}"
-          git push origin master
+          git push origin main
 
