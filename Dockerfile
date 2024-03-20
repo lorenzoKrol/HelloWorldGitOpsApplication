@@ -10,8 +10,8 @@ COPY . /app
 # Install any needed dependencies specified in requirements.txt
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Expose port 5000 to the outside world
-EXPOSE 5000
+# Expose port 8080 to the outside world
+EXPOSE 8080
 
 # Define environment variable
 ENV NAME World
