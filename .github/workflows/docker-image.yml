@@ -19,6 +19,7 @@ jobs:
         uses: bitshifted/git-auto-semver@v1
         with:
           main_branch: master
+          create_tag: true
       - name: Use version
         run: | 
           echo "Calculated version: ${{ steps.calculate-version.outputs.version-string }}"
