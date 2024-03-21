@@ -36,7 +36,7 @@ jobs:
         with:
           context: .
           file: ./Dockerfile
-          tags: ${{ secrets.DOCKER_USERNAME }}/hello-world-flask:${{ steps.semver.outputs.semantic_version }}
+          tags: ${{ secrets.DOCKER_USERNAME }}/hello-world-flask:${{ steps.calculate-version.outputs.version-string }}
 
   push:
     runs-on: ubuntu-latest
