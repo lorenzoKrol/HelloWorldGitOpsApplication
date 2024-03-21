@@ -19,3 +19,6 @@ wording:
     - breaking
     - MAJOR
     - major
+  release:
+    - release-candidate
+    - add-rc
