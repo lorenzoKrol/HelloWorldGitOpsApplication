@@ -3,13 +3,18 @@ force:
   major: 0
   minor: 0
   patch: 0
-  commit:
 wording:
   patch:
     - update
     - initial
+    - patch
+    - PATCH
   minor:
     - change
     - improve
+    - minor
+    - MINOR
   major:
     - breaking
+    - MAJOR
+    - major
