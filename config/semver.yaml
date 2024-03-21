@@ -13,6 +13,3 @@ wording:
     - improve
   major:
     - breaking
-  release:
-    - release-candidate
-    - add-rc
