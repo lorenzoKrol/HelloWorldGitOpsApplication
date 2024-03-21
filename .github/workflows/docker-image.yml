@@ -9,6 +9,8 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    outputs:
+      semantic_version: ${{ steps.semver.outputs.semantic_version }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
