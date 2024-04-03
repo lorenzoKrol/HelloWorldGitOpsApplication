@@ -7,6 +7,20 @@ on:
     branches: [ "master" ]
 
 jobs:
+  load-env-file:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Load .env file
+        uses: xom9ikk/dotenv@v2
+        with:
+          path: ./pipeline_env_variables
+          mode: development
+          load-mode: strict
+
+      - name: Some other action
+        run: |
+          echo "Variable test: ${{ env.test }}"
+          echo "Variable password: ${{ env.password }}"
   build:
     runs-on: ubuntu-latest
     outputs:
