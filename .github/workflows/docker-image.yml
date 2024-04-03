@@ -9,11 +9,11 @@ on:
 jobs:
   load-env-file:
     runs-on: ubuntu-latest
-    outputs:
-      github_infra_repo_username: ${{ steps.vaiables.outputs.github_infra_repo_username }}
-      github_infra_repo_name: ${{ steps.vaiables.outputs.github_infra_repo_name }}
-      github_application_repo_commit_username: ${{ steps.vaiables.outputs.github_application_repo_commit_username }}
-      github_application_repo_commit_user_email: ${{ steps.vaiables.outputs.github_application_repo_commit_user_email }}
+#    outputs:
+#      github_infra_repo_username: ${{ steps.vaiables.outputs.github_infra_repo_username }}
+#      github_infra_repo_name: ${{ steps.vaiables.outputs.github_infra_repo_name }}
+#      github_application_repo_commit_username: ${{ steps.vaiables.outputs.github_application_repo_commit_username }}
+#      github_application_repo_commit_user_email: ${{ steps.vaiables.outputs.github_application_repo_commit_user_email }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
