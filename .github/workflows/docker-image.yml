@@ -54,7 +54,7 @@ jobs:
           password: ${{ secrets.DOCKER_PASSWORD }}
 
       - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
+        uses: docker/setup-buildx-actionv@3.3.0
 
       - name: Build Docker image
         uses: docker/build-push-action@v5
@@ -77,11 +77,14 @@ jobs:
           password: ${{ secrets.DOCKER_PASSWORD }}
 
       - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
+        uses: docker/setup-buildx-action@v3.3.0
+        id: builder
+
 
       - name: Push Docker image to Docker Hub
         uses: docker/build-push-action@v5
         with:
+          builder: ${{ steps.builder.outputs.name }}
           context: .
           file: ./Dockerfile
           push: true
