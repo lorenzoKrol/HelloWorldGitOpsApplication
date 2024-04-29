@@ -1,4 +1,4 @@
-name: Build and Push Docker Image
+name: CI Workflow
 
 on:
   push:
@@ -41,33 +41,14 @@ jobs:
     needs: [load-env-file]
     environment: development
     if: ${{ needs.load-env-file.outputs.dora_metrics == 'TRUE' }}
-
     steps:
-      - name: 🛠️ Checkout code
-        uses: actions/checkout@v3
+      - uses: actions/checkout@v4
+      - name: Update image tag in infrastructure repository
+        uses: ./.github/workflows/update-infrastructure-repository
         with:
-          fetch-depth: 0
-
-      - name: 🛠️ Set up Docker Buildx
-        uses: docker/setup-buildx-action@v2
-
-      - name: ⬇️ Pull Docker image
-        run: docker pull abhimishraa/dorametrics:latest
-
-      - name: ➕ Generate metrics
-        run: docker run --rm -v "$(pwd)/metrics":/app/metrics -v "$(pwd)/.git":/app/.git abhimishraa/dorametrics:latest --calculate-metrics -p master -e True
-
-      - name: 💻 Commit files
-        run: |
-          git config --local user.email ${{needs.load-env-file.outputs.github_application_repo_commit_user_email}}
-          git config --local user.name ${{needs.load-env-file.outputs.github_application_repo_commit_username}}
-          git add .
-          git commit -m "updated metrics insights [skip ci]"
-
-      - name: 🚀 Push changes
-        uses: ad-m/github-push-action@master
-        with:
-          github_token: ${{ secrets.GHA_TOKEN }}
+          github_application_repo_commit_username: ${{needs.load-env-file.outputs.github_application_repo_commit_username}}
+          github_application_repo_commit_user_email: ${{needs.load-env-file.outputs.github_application_repo_commit_user_email}}
+          github_access_token: ${{ secrets.GHA_TOKEN }}
           branch: ${{ github.ref }}
 
   build:
