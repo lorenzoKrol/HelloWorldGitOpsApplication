@@ -5,9 +5,14 @@ runs:
   steps:
     - name: Checkout code
       run: actions/checkout@v3
+      shell: bash
       with:
         fetch-depth: 0
+
     - name: Get Previous Tag
       run: WyriHaximus/github-action-get-previous-tag@v1
+      shell: bash
+
     - name: Display Tag
+      shell: bash
       run: echo "The most recent tag is ${{ steps.Get-Previous-Tag.outputs.tag }}"
