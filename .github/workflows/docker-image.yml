@@ -5,10 +5,13 @@ on:
     branches: [ "master" ]
     paths-ignore:
       - '.github/**'
+      - 'metrics/**'
   pull_request:
     branches: [ "master" ]
     paths-ignore:
       - '.github/**'
+      - 'metrics/**'
+
 
 jobs:  
   extract_tag_test:
