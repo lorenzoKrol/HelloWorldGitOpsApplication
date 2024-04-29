@@ -1,0 +1,45 @@
+name: Update infrastructure repository
+description: Updates the HELM template in the infrastrcure repository
+inputs:
+  github_infra_repo_username:
+    description: "The username where the infrastructure repository is registered to"
+    required: true
+  github_infra_repo_name:
+    description: "The name of the infrastructure repository"
+    required: true
+  github_application_repo_commit_username:
+    description: "The username of the account you want to commit with to the infrastructure repository"
+    required: true
+  github_application_repo_commit_user_email:
+    description: "The email of the account you want to commit with to the infrastructure repository"
+    required: true
+  github_access_token:
+    description: "authorization token"
+    required: true
+  image_version:
+    description: "Version of the image that is going to be pushed"
+    required: true
+runs:
+  using: "composite"
+  steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      with:
+        repository: ${{inputs.github_infra_repo_username}}/${{inputs.github_infra_repo_name}}
+        token: ${{ inputs.GHA_TOKEN }}
+
+    - name: Update image tag in values.yaml
+      shell: bash
+      run: |
+        sed -i 's/^ *tag: .*/tag: "${{ inputs.image_version }}"/' values.yaml
+        sed -i 's/^ *appVersion: .*/appVersion: "${{inputs.image_version }}"/' Chart.yaml
+
+    - name: Commit and push changes to infrastructure repository
+      shell: bash
+      run: |
+        git config --local user.email ${{inputs.github_application_repo_commit_user_email}}
+        git config --local user.name ${{image_version.github_application_repo_commit_username}}
+        git add values.yaml
+        git add Chart.yaml
+        git commit -m "Update image tag to ${{ inputs.semantic_version }}"
+        git push origin main
