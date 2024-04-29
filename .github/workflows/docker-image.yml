@@ -14,7 +14,8 @@ jobs:
   extract_tag_test:
     runs-on: ubuntu-latest
     steps:
-    - uses: ./.github/workflows/extract-tag
+      - uses: actions/checkout@v3
+      - uses: ./.github/workflows/extract-tag
 
   load-env-file:
     runs-on: ubuntu-latest
@@ -25,6 +26,7 @@ jobs:
       github_application_repo_commit_user_email: ${{ steps.variables.outputs.github_application_repo_commit_user_email }}
       dora_metrics: ${{ steps.variables.outputs.dora_metrics }}
     steps:
+      - uses: actions/checkout@v3
       - id: variables
         uses: ./.github/workflows/load-env-file
         with:
