@@ -16,13 +16,14 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
-
-      - name: Extract tag
-        id: extract_tag
-        run: echo "::set-output name=tag::$(git describe --tags $(git rev-list --tags --max-count=1))"
+        with:
+          fetch-depth: 0 
+      - name: 'Get Previous tag'
+        id: previoustag
+        uses: "WyriHaximus/github-action-get-previous-tag@v1"
         
       - name: Display tag
-        run: echo "The most recent tag is ${{ steps.extract_tag.outputs.tag }}"
+        run: echo "The most recent tag is ${{ steps.previoustag.outputs.tag }}"
         
   load-env-file:
     runs-on: ubuntu-latest
