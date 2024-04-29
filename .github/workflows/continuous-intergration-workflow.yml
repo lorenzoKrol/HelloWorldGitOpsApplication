@@ -44,7 +44,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Update image tag in infrastructure repository
-        uses: ./.github/workflows/update-infrastructure-repository
+        uses: ./.github/workflows/dora-metrics
         with:
           github_application_repo_commit_username: ${{needs.load-env-file.outputs.github_application_repo_commit_username}}
           github_application_repo_commit_user_email: ${{needs.load-env-file.outputs.github_application_repo_commit_user_email}}
