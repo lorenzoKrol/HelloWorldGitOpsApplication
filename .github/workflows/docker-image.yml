@@ -6,14 +6,14 @@ on:
   pull_request:
     branches: [ "master" ]
 
-jobs:
+jobs:  
   load-env-file:
     runs-on: ubuntu-latest
     outputs:
-      github_infra_repo_username: ${{ steps.vaiables.outputs.github_infra_repo_username }}
-      github_infra_repo_name: ${{ steps.vaiables.outputs.github_infra_repo_name }}
-      github_application_repo_commit_username: ${{ steps.vaiables.outputs.github_application_repo_commit_username }}
-      github_application_repo_commit_user_email: ${{ steps.vaiables.outputs.github_application_repo_commit_user_email }}
+      github_infra_repo_username: ${{ steps.variables.outputs.github_infra_repo_username }}
+      github_infra_repo_name: ${{ steps.variables.outputs.github_infra_repo_name }}
+      github_application_repo_commit_username: ${{ steps.variables.outputs.github_application_repo_commit_username }}
+      github_application_repo_commit_user_email: ${{ steps.variables.outputs.github_application_repo_commit_user_email }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -23,12 +23,45 @@ jobs:
           path: ./pipeline_env_variables
           mode: development
       - name: Output variables
-        id: vaiables
+        id: variables
         run: |
           echo "github_infra_repo_username=${{ env.GITHUB_INFRA_REPO_USERNAME }}" >> "$GITHUB_OUTPUT"
           echo "github_infra_repo_name=${{ env.GITHUB_INFRA_REPO_NAME }}" >> "$GITHUB_OUTPUT"
           echo "github_application_repo_commit_username=${{ env.GITHUB_APPLICATION_REPO_COMMIT_USERNAME }}" >> "$GITHUB_OUTPUT"
           echo "github_application_repo_commit_user_email=${{ env.GITHUB_APPLICATION_REPO_COMMIT_USER_EMAIL }}" >> "$GITHUB_OUTPUT"
+
+  calculate-metrics:
+    runs-on: ubuntu-latest
+    needs: [load-env-file]
+    environment: development
+    steps:
+      - name: 🛠️ Checkout code
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: 🛠️ Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+
+      - name: ⬇️ Pull Docker image
+        run: docker pull abhimishraa/dorametrics:latest
+
+      - name: ➕ Generate metrics
+        run: docker run --rm -v "$(pwd)/metrics":/app/metrics -v "$(pwd)/.git":/app/.git abhimishraa/dorametrics:latest --calculate-metrics
+
+      - name: 💻 Commit files
+        run: |
+          git config --local user.email ${{needs.load-env-file.outputs.github_application_repo_commit_user_email}}
+          git config --local user.name ${{needs.load-env-file.outputs.github_application_repo_commit_username}}
+          git add .
+          git commit -m "updated metrics insights [skip ci]"
+
+      - name: 🚀 Push changes
+        uses: ad-m/github-push-action@master
+        with:
+          github_token: ${{ secrets.GHA_TOKEN }}
+          branch: ${{ github.ref }}
+
   build:
     runs-on: ubuntu-latest
     outputs:
@@ -53,16 +86,6 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
 
-      # - name: Set up Docker Buildx
-      #   uses: docker/setup-buildx-action@v3.3.0
-
-      # - name: Build Docker image
-      #   uses: docker/build-push-action@v5
-      #   with:
-      #     context: .
-      #     file: ./Dockerfile
-      #     tags: ${{ secrets.DOCKER_USERNAME }}/hello-world-flask:${{ steps.calculate-version.outputs.version-string }}
-
   push:
     runs-on: ubuntu-latest
     needs: build
@@ -80,7 +103,6 @@ jobs:
         uses: docker/setup-buildx-action@v3.3.0
         with:
           version: latest
-
 
       - name: Push Docker image to Docker Hub
         uses: docker/build-push-action@v5
@@ -105,7 +127,6 @@ jobs:
           sed -i 's/^ *tag: .*/tag: "${{ needs.build.outputs.semantic_version }}"/' values.yaml
           sed -i 's/^ *appVersion: .*/appVersion: "${{ needs.build.outputs.semantic_version }}"/' Chart.yaml
 
-
       - name: Commit and push changes to infrastructure repository
         run: |
           git config --local user.email ${{needs.load-env-file.outputs.github_application_repo_commit_user_email}}
@@ -114,5 +135,3 @@ jobs:
           git add Chart.yaml
           git commit -m "Update image tag to ${{ needs.build.outputs.semantic_version }}"
           git push origin main
-
-        
