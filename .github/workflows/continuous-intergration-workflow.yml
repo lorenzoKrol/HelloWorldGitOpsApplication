@@ -60,7 +60,7 @@ jobs:
         uses: ./.github/workflows/calculate-version
         with:
           create_tag: true
-          branch: ${{ github.ref }}
+          branch: ${{ github.ref_name  }}
       - name: Use version
         run: |
           echo "Calculated version: ${{ steps.calculate-version.outputs.version }}"
