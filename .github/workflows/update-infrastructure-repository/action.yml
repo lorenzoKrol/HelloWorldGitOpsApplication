@@ -43,3 +43,5 @@ runs:
         git add Chart.yaml
         git commit -m "Update image tag to ${{ inputs.image_version }}"
         git push origin main
+
+    - uses: actions/checkout@v4
