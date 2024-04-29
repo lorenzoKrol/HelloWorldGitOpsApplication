@@ -17,7 +17,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: ./.github/workflows/extract-tag
+      - uses: ./.github/actions/extract-tag
 
   load-env-file:
     runs-on: ubuntu-latest
@@ -30,7 +30,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - id: variables
-        uses: ./.github/workflows/load-env-file
+        uses: ./.github/actions/load-env-file
         with:
           path: ./pipeline_env_variables
           mode: development
@@ -43,7 +43,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Update image tag in infrastructure repository
-        uses: ./.github/workflows/dora-metrics
+        uses: ./.github/actions/dora-metrics
         with:
           github_application_repo_commit_username: ${{needs.load-env-file.outputs.github_application_repo_commit_username}}
           github_application_repo_commit_user_email: ${{needs.load-env-file.outputs.github_application_repo_commit_user_email}}
@@ -57,7 +57,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - id: calculate-version
-        uses: ./.github/workflows/calculate-version
+        uses: ./.github/actions/calculate-version
         with:
           create_tag: true
           branch: ${{ github.ref_name  }}
@@ -68,7 +68,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Build
-        uses: ./.github/workflows/build-image
+        uses: ./.github/actions/build-image
         with:
           docker_username: ${{ secrets.DOCKER_USERNAME }}
           docker_password: ${{ secrets.DOCKER_PASSWORD }}
@@ -79,7 +79,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: push to image registry
-        uses: ./.github/workflows/push-image
+        uses: ./.github/actions/push-image
         with:
           docker_username: ${{ secrets.DOCKER_USERNAME }}
           docker_password: ${{ secrets.DOCKER_PASSWORD }}
@@ -91,7 +91,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Update image tag in infrastructure repository
-        uses: ./.github/workflows/update-infrastructure-repository
+        uses: ./.github/actions/update-infrastructure-repository
         with:
           github_infra_repo_username: ${{needs.load-env-file.outputs.github_infra_repo_username}}
           github_infra_repo_name: ${{needs.load-env-file.outputs.github_infra_repo_name}}
