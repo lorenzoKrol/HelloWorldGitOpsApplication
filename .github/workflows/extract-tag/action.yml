@@ -5,13 +5,11 @@ runs:
   steps:
     - name: Checkout code
       uses: actions/checkout@v3
-      shell: bash
       with:
         fetch-depth: 0
 
     - name: Get Previous Tag
       uses: WyriHaximus/github-action-get-previous-tag@v1
-      shell: bash
 
     - name: Display Tag
       shell: bash
