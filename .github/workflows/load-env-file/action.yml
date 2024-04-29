@@ -1,0 +1,45 @@
+name: Load environment variables
+description: Loads the environment variables from a file
+inputs:
+  path:
+    description: 'Path to the .env file'
+    required: true
+  mode:
+    description: 'Mode for loading the .env file'
+    default: 'development'
+    required: false
+outputs:
+  github_infra_repo_username:
+    description: "The username where the infrastructure repository is registered to"
+    value: ${{ steps.variables.outputs.github_infra_repo_username }}
+  github_infra_repo_name:
+    description: "The name of the infrastructure repository"
+    value: ${{ steps.variables.outputs.github_infra_repo_name }}
+  github_application_repo_commit_username:
+    description: "The username of the account you want to commit with to the infrastructure repository"
+    value: ${{ steps.variables.outputs.github_application_repo_commit_username }}
+  github_application_repo_commit_user_email:
+    description: "The email of the account you want to commit with to the infrastructure repository"
+    value: ${{ steps.variables.outputs.github_application_repo_commit_user_email }}
+  dora_metrics:
+    description: "If you want to generate DORA metrics. values: TRUE||FALSE"
+    value: ${{ steps.variables.outputs.dora_metrics }}
+runs:
+  using: "composite"
+  steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+    - name: Load .env file
+      uses: xom9ikk/dotenv@v2
+      with:
+        path: ${{ inputs.path }}
+        mode: ${{ inputs.mode }}
+    - name: Output variables
+      id: variables
+      shell: bash
+      run: |
+        echo "github_infra_repo_username=${{ env.GITHUB_INFRA_REPO_USERNAME }}" >> "$GITHUB_OUTPUT"
+        echo "github_infra_repo_name=${{ env.GITHUB_INFRA_REPO_NAME }}" >> "$GITHUB_OUTPUT"
+        echo "github_application_repo_commit_username=${{ env.GITHUB_APPLICATION_REPO_COMMIT_USERNAME }}" >> "$GITHUB_OUTPUT"
+        echo "github_application_repo_commit_user_email=${{ env.GITHUB_APPLICATION_REPO_COMMIT_USER_EMAIL }}" >> "$GITHUB_OUTPUT"
+        echo "dora_metrics=${{ env.DORA_METRICS }}" >> "$GITHUB_OUTPUT"

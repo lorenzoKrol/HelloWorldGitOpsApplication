@@ -14,7 +14,6 @@ jobs:
   extract_tag_test:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v4
     - uses: ./.github/workflows/extract-tag
 
   load-env-file:
@@ -25,24 +24,12 @@ jobs:
       github_application_repo_commit_username: ${{ steps.variables.outputs.github_application_repo_commit_username }}
       github_application_repo_commit_user_email: ${{ steps.variables.outputs.github_application_repo_commit_user_email }}
       dora_metrics: ${{ steps.variables.outputs.dora_metrics }}
-
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-      - name: Load .env file
-        uses: xom9ikk/dotenv@v2
+      - id: variables
+        uses: ./.github/workflows/load-env-file
         with:
           path: ./pipeline_env_variables
           mode: development
-      - name: Output variables
-        id: variables
-        run: |
-          echo "github_infra_repo_username=${{ env.GITHUB_INFRA_REPO_USERNAME }}" >> "$GITHUB_OUTPUT"
-          echo "github_infra_repo_name=${{ env.GITHUB_INFRA_REPO_NAME }}" >> "$GITHUB_OUTPUT"
-          echo "github_application_repo_commit_username=${{ env.GITHUB_APPLICATION_REPO_COMMIT_USERNAME }}" >> "$GITHUB_OUTPUT"
-          echo "github_application_repo_commit_user_email=${{ env.GITHUB_APPLICATION_REPO_COMMIT_USER_EMAIL }}" >> "$GITHUB_OUTPUT"
-          echo "dora_metrics=${{ env.DORA_METRICS }}" >> "$GITHUB_OUTPUT"
-
 
   calculate-metrics:
     runs-on: ubuntu-latest
