@@ -12,7 +12,6 @@ on:
       - '.github/**'
       - 'metrics/**'
 
-
 jobs:  
   extract_tag_test:
     runs-on: ubuntu-latest
@@ -51,59 +50,44 @@ jobs:
           github_access_token: ${{ secrets.GHA_TOKEN }}
           branch: ${{ github.ref }}
 
-  build:
+  calculate-version:
     runs-on: ubuntu-latest
     outputs:
-      semantic_version: ${{ steps.calculate-version.outputs.version-string }}
+      version: ${{ steps.calculate-version.outputs.version }}
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
+      - name: Update image tag in infrastructure repository
+        uses: ./.github/workflows/calculate-version
         with:
-          fetch-depth: 0
-      - name: calculate version
-        id: calculate-version
-        uses: bitshifted/git-auto-semver@v1
-        with:
-          main_branch: master
           create_tag: true
-      - name: Use version
-        run: | 
-          echo "Calculated version: ${{ steps.calculate-version.outputs.version-string }}"
-      - name: Login to Docker Hub
-        uses: docker/login-action@v3
+          branch: ${{ github.ref }}
+
+  build:
+    runs-on: ubuntu-latest
+    needs: calculate-version
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build
+        uses: ./.github/workflows/build-image
         with:
-          username: ${{ secrets.DOCKER_USERNAME }}
-          password: ${{ secrets.DOCKER_PASSWORD }}
+          docker_username: ${{ secrets.DOCKER_USERNAME }}
+          docker_password: ${{ secrets.DOCKER_PASSWORD }}
 
   push:
     runs-on: ubuntu-latest
-    needs: build
+    needs: [calculate-version, build]
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Login to Docker Hub
-        uses: docker/login-action@v3
+      - uses: actions/checkout@v4
+      - name: push to image registry
+        uses: ./.github/workflows/push-image
         with:
-          username: ${{ secrets.DOCKER_USERNAME }}
-          password: ${{ secrets.DOCKER_PASSWORD }}
-
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3.3.0
-        with:
-          version: latest
-
-      - name: Push Docker image to Docker Hub
-        uses: docker/build-push-action@v5
-        with:
-          context: .
-          file: ./Dockerfile
-          push: true
-          tags: ${{ secrets.DOCKER_USERNAME }}/hello-world-flask:${{ needs.build.outputs.semantic_version }}
+          docker_username: ${{ secrets.DOCKER_USERNAME }}
+          docker_password: ${{ secrets.DOCKER_PASSWORD }}
+          image_version: ${{ needs.build.outputs.version }}
           
   update-helm-values:
     runs-on: ubuntu-latest
-    needs: [push, build,load-env-file]
+    needs: [push,build,calculate-version,load-env-file]
     steps:
       - uses: actions/checkout@v4
       - name: Update image tag in infrastructure repository
@@ -114,5 +98,5 @@ jobs:
           github_application_repo_commit_username: ${{needs.load-env-file.outputs.github_application_repo_commit_username}}
           github_application_repo_commit_user_email: ${{needs.load-env-file.outputs.github_application_repo_commit_user_email}}
           github_access_token: ${{ secrets.GHA_TOKEN }}
-          image_version: ${{ needs.build.outputs.semantic_version }}
+          image_version: ${{ needs.build.outputs.version }}
 
