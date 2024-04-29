@@ -14,7 +14,7 @@ jobs:
   extract_tag_test:
     runs-on: ubuntu-latest
     steps:
-      - uses: ./.github/actions/extract-tag-test
+      - uses: .github/actions/extract-tag-test
 
   load-env-file:
     runs-on: ubuntu-latest
