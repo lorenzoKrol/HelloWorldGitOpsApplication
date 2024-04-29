@@ -1,0 +1,13 @@
+name: Extract Tag Test
+description: Extracts the previous tag from the repository
+runs:
+  using: 'composite'
+  steps:
+    - name: Checkout code
+      run: actions/checkout@v3
+      with:
+        fetch-depth: 0
+    - name: Get Previous Tag
+      run: WyriHaximus/github-action-get-previous-tag@v1
+    - name: Display Tag
+      run: echo "The most recent tag is ${{ steps.Get-Previous-Tag.outputs.tag }}"

@@ -14,17 +14,8 @@ jobs:
   extract_tag_test:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
-        with:
-          fetch-depth: 0 
-      - name: 'Get Previous tag'
-        id: previoustag
-        uses: "WyriHaximus/github-action-get-previous-tag@v1"
-        
-      - name: Display tag
-        run: echo "The most recent tag is ${{ steps.previoustag.outputs.tag }}"
-        
+      - uses: ./.github/actions/extract-tag-test
+
   load-env-file:
     runs-on: ubuntu-latest
     outputs:
