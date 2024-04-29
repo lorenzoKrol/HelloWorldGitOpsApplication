@@ -1,7 +1,7 @@
 name: Extract Tag Test
 description: Extracts the previous tag from the repository
 runs:
-  using: composite
+  using: "composite"
   steps:
     - name: Checkout code
       run: actions/checkout@v3
