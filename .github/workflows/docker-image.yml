@@ -47,7 +47,7 @@ jobs:
         run: docker pull abhimishraa/dorametrics:latest
 
       - name: ➕ Generate metrics
-        run: docker run --rm -v "$(pwd)/metrics":/app/metrics -v "$(pwd)/.git":/app/.git abhimishraa/dorametrics:latest --calculate-metrics -p master
+        run: docker run --rm -v "$(pwd)/metrics":/app/metrics -v "$(pwd)/.git":/app/.git abhimishraa/dorametrics:latest --calculate-metrics -p "master"
 
       - name: 💻 Commit files
         run: |
