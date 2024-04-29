@@ -41,5 +41,5 @@ runs:
         git config --local user.name ${{inputs.github_application_repo_commit_username}}
         git add values.yaml
         git add Chart.yaml
-        git commit -m "Update image tag to ${{ inputs.semantic_version }}"
+        git commit -m "Update image tag to ${{ inputs.image_version }}"
         git push origin main
