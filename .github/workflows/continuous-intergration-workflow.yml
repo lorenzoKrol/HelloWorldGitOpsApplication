@@ -3,9 +3,9 @@ name: CI Workflow
 on:
   push:
     branches: [ "master" ]
-#    paths-ignore:
-#      - '.github/**'
-#      - 'metrics/**'
+    paths-ignore:
+      - '.github/**'
+      - 'metrics/**'
   pull_request:
     branches: [ "master" ]
     paths-ignore:
@@ -13,42 +13,42 @@ on:
       - 'metrics/**'
 
 jobs:  
-#  extract_tag_test:
-#    runs-on: ubuntu-latest
-#    steps:
-#      - uses: actions/checkout@v4
-#      - uses: ./.github/workflows/extract-tag
-#
-#  load-env-file:
-#    runs-on: ubuntu-latest
-#    outputs:
-#      github_infra_repo_username: ${{ steps.variables.outputs.github_infra_repo_username }}
-#      github_infra_repo_name: ${{ steps.variables.outputs.github_infra_repo_name }}
-#      github_application_repo_commit_username: ${{ steps.variables.outputs.github_application_repo_commit_username }}
-#      github_application_repo_commit_user_email: ${{ steps.variables.outputs.github_application_repo_commit_user_email }}
-#      dora_metrics: ${{ steps.variables.outputs.dora_metrics }}
-#    steps:
-#      - uses: actions/checkout@v4
-#      - id: variables
-#        uses: ./.github/workflows/load-env-file
-#        with:
-#          path: ./pipeline_env_variables
-#          mode: development
-#
-#  calculate-metrics:
-#    runs-on: ubuntu-latest
-#    needs: [load-env-file]
-#    environment: development
-#    if: ${{ needs.load-env-file.outputs.dora_metrics == 'TRUE' }}
-#    steps:
-#      - uses: actions/checkout@v4
-#      - name: Update image tag in infrastructure repository
-#        uses: ./.github/workflows/dora-metrics
-#        with:
-#          github_application_repo_commit_username: ${{needs.load-env-file.outputs.github_application_repo_commit_username}}
-#          github_application_repo_commit_user_email: ${{needs.load-env-file.outputs.github_application_repo_commit_user_email}}
-#          github_access_token: ${{ secrets.GHA_TOKEN }}
-#          branch: ${{ github.ref }}
+  extract_tag_test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/workflows/extract-tag
+
+  load-env-file:
+    runs-on: ubuntu-latest
+    outputs:
+      github_infra_repo_username: ${{ steps.variables.outputs.github_infra_repo_username }}
+      github_infra_repo_name: ${{ steps.variables.outputs.github_infra_repo_name }}
+      github_application_repo_commit_username: ${{ steps.variables.outputs.github_application_repo_commit_username }}
+      github_application_repo_commit_user_email: ${{ steps.variables.outputs.github_application_repo_commit_user_email }}
+      dora_metrics: ${{ steps.variables.outputs.dora_metrics }}
+    steps:
+      - uses: actions/checkout@v4
+      - id: variables
+        uses: ./.github/workflows/load-env-file
+        with:
+          path: ./pipeline_env_variables
+          mode: development
+
+  calculate-metrics:
+    runs-on: ubuntu-latest
+    needs: [load-env-file]
+    environment: development
+    if: ${{ needs.load-env-file.outputs.dora_metrics == 'TRUE' }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Update image tag in infrastructure repository
+        uses: ./.github/workflows/dora-metrics
+        with:
+          github_application_repo_commit_username: ${{needs.load-env-file.outputs.github_application_repo_commit_username}}
+          github_application_repo_commit_user_email: ${{needs.load-env-file.outputs.github_application_repo_commit_user_email}}
+          github_access_token: ${{ secrets.GHA_TOKEN }}
+          branch: ${{ github.ref_name }}
 
   calculate-version:
     runs-on: ubuntu-latest
@@ -61,45 +61,42 @@ jobs:
         with:
           create_tag: true
           branch: ${{ github.ref_name  }}
-      - name: Use version
-        run: |
-          echo "Calculated version: ${{ steps.calculate-version.outputs.version }}"
 
-#  build:
-#    runs-on: ubuntu-latest
-#    needs: calculate-version
-#    steps:
-#      - uses: actions/checkout@v4
-#      - name: Build
-#        uses: ./.github/workflows/build-image
-#        with:
-#          docker_username: ${{ secrets.DOCKER_USERNAME }}
-#          docker_password: ${{ secrets.DOCKER_PASSWORD }}
-#
-#  push:
-#    runs-on: ubuntu-latest
-#    needs: [calculate-version, build]
-#    steps:
-#      - uses: actions/checkout@v4
-#      - name: push to image registry
-#        uses: ./.github/workflows/push-image
-#        with:
-#          docker_username: ${{ secrets.DOCKER_USERNAME }}
-#          docker_password: ${{ secrets.DOCKER_PASSWORD }}
-#          image_version: ${{ needs.calculate-version.outputs.version }}
-#
-#  update-helm-values:
-#    runs-on: ubuntu-latest
-#    needs: [push,build,calculate-version,load-env-file]
-#    steps:
-#      - uses: actions/checkout@v4
-#      - name: Update image tag in infrastructure repository
-#        uses: ./.github/workflows/update-infrastructure-repository
-#        with:
-#          github_infra_repo_username: ${{needs.load-env-file.outputs.github_infra_repo_username}}
-#          github_infra_repo_name: ${{needs.load-env-file.outputs.github_infra_repo_name}}
-#          github_application_repo_commit_username: ${{needs.load-env-file.outputs.github_application_repo_commit_username}}
-#          github_application_repo_commit_user_email: ${{needs.load-env-file.outputs.github_application_repo_commit_user_email}}
-#          github_access_token: ${{ secrets.GHA_TOKEN }}
-#          image_version: ${{ needs.calculate-version.outputs.version }}
+  build:
+    runs-on: ubuntu-latest
+    needs: calculate-version
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build
+        uses: ./.github/workflows/build-image
+        with:
+          docker_username: ${{ secrets.DOCKER_USERNAME }}
+          docker_password: ${{ secrets.DOCKER_PASSWORD }}
+
+  push:
+    runs-on: ubuntu-latest
+    needs: [calculate-version, build]
+    steps:
+      - uses: actions/checkout@v4
+      - name: push to image registry
+        uses: ./.github/workflows/push-image
+        with:
+          docker_username: ${{ secrets.DOCKER_USERNAME }}
+          docker_password: ${{ secrets.DOCKER_PASSWORD }}
+          image_version: ${{ needs.calculate-version.outputs.version }}
+
+  update-helm-values:
+    runs-on: ubuntu-latest
+    needs: [push,build,calculate-version,load-env-file]
+    steps:
+      - uses: actions/checkout@v4
+      - name: Update image tag in infrastructure repository
+        uses: ./.github/workflows/update-infrastructure-repository
+        with:
+          github_infra_repo_username: ${{needs.load-env-file.outputs.github_infra_repo_username}}
+          github_infra_repo_name: ${{needs.load-env-file.outputs.github_infra_repo_name}}
+          github_application_repo_commit_username: ${{needs.load-env-file.outputs.github_application_repo_commit_username}}
+          github_application_repo_commit_user_email: ${{needs.load-env-file.outputs.github_application_repo_commit_user_email}}
+          github_access_token: ${{ secrets.GHA_TOKEN }}
+          image_version: ${{ needs.calculate-version.outputs.version }}
 

@@ -24,8 +24,3 @@ runs:
       with:
         main_branch: ${{ inputs.branch }}
         create_tag: ${{ inputs.create_tag }}
-    - name: Use version
-      shell: bash
-      run: |
-        echo "Calculated version: ${{ steps.calculate-version.outputs.version-string }}"
-        echo ${{inputs.branch}}
