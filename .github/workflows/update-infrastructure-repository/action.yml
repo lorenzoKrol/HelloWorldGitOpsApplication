@@ -38,7 +38,7 @@ runs:
       shell: bash
       run: |
         git config --local user.email ${{inputs.github_application_repo_commit_user_email}}
-        git config --local user.name ${{image_version.github_application_repo_commit_username}}
+        git config --local user.name ${{inputs.github_application_repo_commit_username}}
         git add values.yaml
         git add Chart.yaml
         git commit -m "Update image tag to ${{ inputs.semantic_version }}"
