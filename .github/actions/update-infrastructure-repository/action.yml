@@ -32,7 +32,9 @@ runs:
       shell: bash
       run: |
         sed -i 's/^ *tag: .*/tag: "${{ inputs.image_version }}"/' charts/development/values.yaml
+        sed -i 's/^ *version: .*/version: "${{inputs.image_version }}"/' charts/development/Chart.yaml
         sed -i 's/^ *appVersion: .*/appVersion: "${{inputs.image_version }}"/' charts/development/Chart.yaml
+
 
     - name: Commit and push changes to infrastructure repository
       shell: bash
