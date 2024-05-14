@@ -13,12 +13,12 @@ runs:
         fetch-depth: 0
 
     - name: Get Previous Tag
+      id: get_tag
       uses: WyriHaximus/github-action-get-previous-tag@v1
-
     - name: Display Tag
       shell: bash
-      run: echo "The most recent tag is ${{ steps.Get-Previous-Tag.outputs.tag }}"
+      run: echo "The most recent tag is ${{ steps.get_tag.outputs.tag }}"
     - name: Output tag
       id: tag
       shell: bash
-      run:  echo "tag_version=${{ steps.Get-Previous-Tag.outputs.tag }}" >> "$GITHUB_OUTPUT"
+      run:  echo "tag_version=${{ steps.get_tag.outputs.tag }}" >> "$GITHUB_OUTPUT"
