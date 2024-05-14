@@ -17,7 +17,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - id: get_tag
-      - uses: ./.github/actions/extract-tag
+        uses: ./.github/actions/extract-tag
   load-env-file:
     if: github.event.pull_request.merged == true
     runs-on: ubuntu-latest
