@@ -27,8 +27,8 @@ jobs:
       github_application_repo_commit_username: ${{ steps.variables.outputs.github_application_repo_commit_username }}
       github_application_repo_commit_user_email: ${{ steps.variables.outputs.github_application_repo_commit_user_email }}
       image_name: ${{steps.variables.outputs.image_name}}
-      original_image_repository: ${{steps.variables.outputs.original_repository}}
-      target_image_repository: ${{steps.variables.outputs.target_repository}}
+      original_image_repository: ${{steps.variables.outputs.original_image_repository}}
+      target_image_repository: ${{steps.variables.outputs.target_image_repository}}
     steps:
       - uses: actions/checkout@v4
       - id: variables
