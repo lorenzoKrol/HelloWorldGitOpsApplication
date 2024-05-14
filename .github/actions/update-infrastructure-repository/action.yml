@@ -42,6 +42,6 @@ runs:
         git add charts/development/values.yaml
         git add charts/development/Chart.yaml
         git commit -m "Update image tag to ${{ inputs.image_version }}"
-        gh pr create --title "Update image tag" --body "Automated pull request to update image tag" --base main
+        gh pr create --title "Update image tag" --body "Automated pull request to update image tag" --base main --head
 
     - uses: actions/checkout@v4
