@@ -37,11 +37,13 @@ runs:
     - name: Commit and push changes to infrastructure repository
       shell: bash
       run: |
+        git branch automated-pr-${{ inputs.image_version }}
+        git checkout automated-pr-${{ inputs.image_version }}
         git config --local user.email ${{inputs.github_application_repo_commit_user_email}}
         git config --local user.name ${{inputs.github_application_repo_commit_username}}
         git add charts/development/values.yaml
         git add charts/development/Chart.yaml
         git commit -m "Update image tag to ${{ inputs.image_version }}"
-        git push origin master
+        git push origin automated-pr-${{ inputs.image_version }}
 
     - uses: actions/checkout@v4
