@@ -22,6 +22,5 @@ runs:
       id: tag
       shell: bash
       run: |
-        tag_name="${{ steps.get_tag.outputs.tag }}"
-        tag_number="${tag_name#"v"}"
-        echo "tag=${{ tag_number }}" >> "$GITHUB_OUTPUT"
+        TAG=${{ steps.get_tag.outputs.tag }}
+        echo "tag=${TAG#v}" >> $GITHUB_OUTPUT
