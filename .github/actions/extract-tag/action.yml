@@ -24,5 +24,4 @@ runs:
       run: |
         tag_name="${{ steps.get_tag.outputs.tag }}"
         tag_number="${tag_name#"v"}"
-        echo "::set-output name=version_number::$version_number"
         echo "tag=${{ tag_number }}" >> "$GITHUB_OUTPUT"
