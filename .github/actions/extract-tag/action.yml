@@ -3,7 +3,7 @@ description: Extracts the previous tag from the repository
 outputs:
   tag:
     description: "The current tag of the application"
-    value: ${{ steps.tag.outputs.tag_version }}
+    value: ${{ steps.tag.outputs.tag }}
 runs:
   using: "composite"
   steps:
@@ -21,4 +21,4 @@ runs:
     - name: Output tag
       id: tag
       shell: bash
-      run:  echo "tag_version=${{ steps.get_tag.outputs.tag }}" >> "$GITHUB_OUTPUT"
+      run:  echo "tag=${{ steps.get_tag.outputs.tag }}" >> "$GITHUB_OUTPUT"
