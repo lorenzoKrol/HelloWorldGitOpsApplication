@@ -1,6 +1,9 @@
 name: Push Image
 description: Push Image
 inputs:
+  image_name:
+    description: "Name of the image that is going to be pushed"
+    required: true
   docker_username:
     description: "The username of the docker account"
     required: true
@@ -33,4 +36,4 @@ runs:
         context: .
         file: ./Dockerfile
         push: true
-        tags: ${{ inputs.docker_username }}/hello-world-flask:${{ inputs.image_version }}
+        tags: ${{ inputs.docker_username }}/${{inputs.image_name}}:${{ inputs.image_version }}

@@ -1,6 +1,9 @@
 name: Update infrastructure repository
 description: Updates the HELM template in the infrastrcure repository
 inputs:
+  environment:
+    description: "The target environment for the deployment"
+    required: true
   github_infra_repo_username:
     description: "The username where the infrastructure repository is registered to"
     required: true
@@ -31,9 +34,9 @@ runs:
     - name: Update image tag in values.yaml
       shell: bash
       run: |
-        sed -i 's/^ *tag: .*/tag: "${{ inputs.image_version }}"/' charts/development/values.yaml
-        sed -i 's/^ *version: .*/version: "${{inputs.image_version }}"/' charts/development/Chart.yaml
-        sed -i 's/^ *appVersion: .*/appVersion: "${{inputs.image_version }}"/' charts/development/Chart.yaml
+        sed -i 's/^ *tag: .*/tag: "${{ inputs.image_version }}"/' charts/${{inputs.environment}}/values.yaml
+        sed -i 's/^ *version: .*/version: "${{inputs.image_version }}"/' charts/${{inputs.environment}}/Chart.yaml
+        sed -i 's/^ *appVersion: .*/appVersion: "${{inputs.image_version }}"/' charts/${{inputs.environment}}/Chart.yaml
 
 
     - name: Commit and push changes to infrastructure repository
@@ -43,8 +46,8 @@ runs:
         git checkout automated-pr-${{ inputs.image_version }}
         git config --local user.email ${{inputs.github_application_repo_commit_user_email}}
         git config --local user.name ${{inputs.github_application_repo_commit_username}}
-        git add charts/development/values.yaml
-        git add charts/development/Chart.yaml
+        git add charts/${{inputs.environment}}/values.yaml
+        git add charts/${{inputs.environment}}/Chart.yaml
         git commit -m "Update image tag to ${{ inputs.image_version }}"
         git push origin automated-pr-${{ inputs.image_version }}
         gh pr create -B main -H automated-pr-${{ inputs.image_version }} --title 'Merge automated-pr-${{ inputs.image_version }} into main' --body 'Created by Github action'
