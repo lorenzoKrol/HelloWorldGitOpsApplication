@@ -3,7 +3,7 @@ description: Extracts the previous tag from the repository
 outputs:
   tag:
     description: "The current tag of the application"
-    value: ${{ steps.tag.outputs.tag }}
+    value: ${{ steps.get_tag.outputs.tag }}
 runs:
   using: "composite"
   steps:
@@ -18,7 +18,3 @@ runs:
     - name: Display Tag
       shell: bash
       run: echo "The most recent tag is ${{ steps.get_tag.outputs.tag }}"
-    - name: Output tag
-      id: tag
-      shell: bash
-      run:  echo "tag=${{ steps.get_tag.outputs.tag }}" >> "$GITHUB_OUTPUT"
