@@ -87,8 +87,6 @@ jobs:
 
   update-helm-values:
     runs-on: ubuntu-latest
-    env:
-      GH_TOKEN: ${{ secrets.GHA_TOKEN }}
     needs: [push,build,calculate-version,load-env-file]
     steps:
       - uses: actions/checkout@v4
