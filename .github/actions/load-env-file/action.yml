@@ -1,0 +1,75 @@
+name: Load environment variables
+description: Loads the environment variables from a file
+inputs:
+  path:
+    description: 'Path to the .env file'
+    required: true
+  mode:
+    description: 'Mode for loading the .env file'
+    default: 'development'
+    required: false
+outputs:
+  environment:
+    description: "The target environment for the deployment"
+    value: ${{ steps.variables.outputs.environment }}
+  github_infra_repo_username:
+    description: "The username where the infrastructure repository is registered to"
+    value: ${{ steps.variables.outputs.github_infra_repo_username }}
+  github_infra_repo_name:
+    description: "The name of the infrastructure repository"
+    value: ${{ steps.variables.outputs.github_infra_repo_name }}
+  github_application_repo_commit_username:
+    description: "The username of the account you want to commit with to the infrastructure repository"
+    value: ${{ steps.variables.outputs.github_application_repo_commit_username }}
+  github_application_repo_commit_user_email:
+    description: "The email of the account you want to commit with to the infrastructure repository"
+    value: ${{ steps.variables.outputs.github_application_repo_commit_user_email }}
+  dora_metrics:
+    description: "If you want to generate DORA metrics. values: TRUE||FALSE"
+    value: ${{ steps.variables.outputs.dora_metrics }}
+  image_name:
+    description: "Name of the image you want to build"
+    value: ${{ steps.variables.outputs.image_name }}
+  original_image_repository:
+    description: "Name of the repository where the image is going to be promoted from"
+    value: ${{ steps.variables.outputs.original_image_repository }}
+  target_image_repository:
+    description: "Name of the repository where the image is going to be promoted to"
+    value: ${{ steps.variables.outputs.target_image_repository }}
+
+runs:
+  using: "composite"
+  steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+    - name: Load .env file
+      uses: xom9ikk/dotenv@v2
+      with:
+        path: ${{ inputs.path }}
+        mode: ${{ inputs.mode }}
+    - name: Output variables
+      id: variables
+      shell: bash
+      run: |
+        if [ "${{ inputs.mode }}" == "development" ]; then
+          # Development mode specific actions
+          echo "environment=${{ env.ENVIRONMENT }}" >> "$GITHUB_OUTPUT"
+          echo "github_infra_repo_username=${{ env.GITHUB_INFRA_REPO_USERNAME }}" >> "$GITHUB_OUTPUT"
+          echo "github_infra_repo_name=${{ env.GITHUB_INFRA_REPO_NAME }}" >> "$GITHUB_OUTPUT"
+          echo "github_application_repo_commit_username=${{ env.GITHUB_APPLICATION_REPO_COMMIT_USERNAME }}" >> "$GITHUB_OUTPUT"
+          echo "github_application_repo_commit_user_email=${{ env.GITHUB_APPLICATION_REPO_COMMIT_USER_EMAIL }}" >> "$GITHUB_OUTPUT"
+          echo "dora_metrics=${{ env.DORA_METRICS }}" >> "$GITHUB_OUTPUT"
+          echo "image_name=${{ env.IMAGE_NAME }}" >> "$GITHUB_OUTPUT"
+        elif [ "${{ inputs.mode }}" == "acceptance" ]; then
+          # Acceptance mode specific actions
+          echo "environment=${{ env.ENVIRONMENT_PROD }}" >> "$GITHUB_OUTPUT"
+          echo "github_infra_repo_username=${{ env.GITHUB_INFRA_REPO_USERNAME_PROD }}" >> "$GITHUB_OUTPUT"
+          echo "github_infra_repo_name=${{ env.GITHUB_INFRA_REPO_NAME_PROD }}" >> "$GITHUB_OUTPUT"
+          echo "github_application_repo_commit_username=${{ env.GITHUB_APPLICATION_REPO_COMMIT_USERNAME_PROD }}" >> "$GITHUB_OUTPUT"
+          echo "github_application_repo_commit_user_email=${{ env.GITHUB_APPLICATION_REPO_COMMIT_USER_EMAIL_PROD }}" >> "$GITHUB_OUTPUT"
+          echo "original_image_repository=${{ env.ORIGINAL_IMAGE_REPOSITORY }}" >> "$GITHUB_OUTPUT"
+          echo "target_image_repository=${{ env.TARGET_IMAGE_REPOSITORY }}" >> "$GITHUB_OUTPUT"
+        else
+          echo "Invalid mode provided."
+          exit 1
+        fi

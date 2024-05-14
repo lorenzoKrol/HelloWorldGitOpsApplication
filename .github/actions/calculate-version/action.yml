@@ -1,0 +1,26 @@
+name: Calculate version
+description: Calculate version
+inputs:
+  create_tag:
+    description: "create tag"
+    required: true
+  branch:
+    description: "repository branch"
+    required: true
+outputs:
+  version:
+    description: "The next calculated version based on commit"
+    value: ${{ steps.calculate-version.outputs.version-string }}
+runs:
+  using: "composite"
+  steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+    - name: calculate version
+      id: calculate-version
+      uses: bitshifted/git-auto-semver@v1
+      with:
+        main_branch: ${{ inputs.branch }}
+        create_tag: ${{ inputs.create_tag }}

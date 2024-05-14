@@ -1,0 +1,65 @@
+on:
+  pull_request:
+    types:
+      - closed
+    branches: [ "acceptance" ]
+    paths-ignore:
+      - '.github/**'
+      - 'metrics/**'
+jobs:
+  extract_tag:
+    if: github.event.pull_request.merged == true
+    runs-on: ubuntu-latest
+    outputs:
+      tag: ${{ steps.tag.outputs.tag_version }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/extract-tag
+  load-env-file:
+    if: github.event.pull_request.merged == true
+    runs-on: ubuntu-latest
+    outputs:
+      environment: ${{ steps.variables.outputs.environment }}
+      github_infra_repo_username: ${{ steps.variables.outputs.github_infra_repo_username }}
+      github_infra_repo_name: ${{ steps.variables.outputs.github_infra_repo_name }}
+      github_application_repo_commit_username: ${{ steps.variables.outputs.github_application_repo_commit_username }}
+      github_application_repo_commit_user_email: ${{ steps.variables.outputs.github_application_repo_commit_user_email }}
+      image_name: ${{steps.variables.outputs.image_name}}
+      original_image_repository: ${{steps.variables.outputs.original_repository}}
+      target_image_repository: ${{steps.variables.outputs.target_repository}}
+    steps:
+      - uses: actions/checkout@v4
+      - id: variables
+        uses: ./.github/actions/load-env-file
+        with:
+          path: ./pipeline_env_variables
+          mode: acceptance
+  promote:
+    if: github.event.pull_request.merged == true
+    runs-on: ubuntu-latest
+    needs: [ load-env-file,extract_tag ]
+    steps:
+      - uses: actions/checkout@v4
+      - name: push to image registry
+        uses: ./.github/actions/promote-image
+        with:
+          docker_username: ${{ secrets.DOCKER_USERNAME }}
+          docker_password: ${{ secrets.DOCKER_PASSWORD }}
+          image_version: ${{ needs.calculate-version.outputs.version }}
+          original_image_repository: ${{needs.load-env-file.outputs.original_image_repository}}
+          target_image_repository: ${{needs.load-env-file.outputs.target_image_repository}}
+  update-helm-values:
+    runs-on: ubuntu-latest
+    needs: [ extract_tag,load-env-file,promote ]
+    steps:
+      - uses: actions/checkout@v4
+      - name: Update image tag in infrastructure repository
+        uses: ./.github/actions/update-infrastructure-repository
+        with:
+          environment: ${{ needs.load-env-file.outputs.environment }}
+          github_infra_repo_username: ${{needs.load-env-file.outputs.github_infra_repo_username}}
+          github_infra_repo_name: ${{needs.load-env-file.outputs.github_infra_repo_name}}
+          github_application_repo_commit_username: ${{needs.load-env-file.outputs.github_application_repo_commit_username}}
+          github_application_repo_commit_user_email: ${{needs.load-env-file.outputs.github_application_repo_commit_user_email}}
+          github_access_token: ${{ secrets.GHA_TOKEN }}
+          image_version: ${{ needs.extract_tag.outputs.tag }}

@@ -1,0 +1,57 @@
+name: Update infrastructure repository
+description: Updates the HELM template in the infrastrcure repository
+inputs:
+  environment:
+    description: "The target environment for the deployment"
+    required: true
+  github_infra_repo_username:
+    description: "The username where the infrastructure repository is registered to"
+    required: true
+  github_infra_repo_name:
+    description: "The name of the infrastructure repository"
+    required: true
+  github_application_repo_commit_username:
+    description: "The username of the account you want to commit with to the infrastructure repository"
+    required: true
+  github_application_repo_commit_user_email:
+    description: "The email of the account you want to commit with to the infrastructure repository"
+    required: true
+  github_access_token:
+    description: "authorization token"
+    required: true
+  image_version:
+    description: "Version of the image that is going to be pushed"
+    required: true
+runs:
+  using: "composite"
+  steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      with:
+        repository: ${{inputs.github_infra_repo_username}}/${{inputs.github_infra_repo_name}}
+        token: ${{ inputs.github_access_token }}
+
+    - name: Update image tag in values.yaml
+      shell: bash
+      run: |
+        sed -i 's/^ *tag: .*/tag: "${{ inputs.image_version }}"/' charts/${{inputs.environment}}/values.yaml
+        sed -i 's/^ *version: .*/version: "${{inputs.image_version }}"/' charts/${{inputs.environment}}/Chart.yaml
+        sed -i 's/^ *appVersion: .*/appVersion: "${{inputs.image_version }}"/' charts/${{inputs.environment}}/Chart.yaml
+
+
+    - name: Commit and push changes to infrastructure repository
+      shell: bash
+      run: |
+        git branch automated-pr-${{ inputs.image_version }}
+        git checkout automated-pr-${{ inputs.image_version }}
+        git config --local user.email ${{inputs.github_application_repo_commit_user_email}}
+        git config --local user.name ${{inputs.github_application_repo_commit_username}}
+        git add charts/${{inputs.environment}}/values.yaml
+        git add charts/${{inputs.environment}}/Chart.yaml
+        git commit -m "Update image tag to ${{ inputs.image_version }}"
+        git push origin automated-pr-${{ inputs.image_version }}
+        gh pr create -B main -H automated-pr-${{ inputs.image_version }} --title 'Merge automated-pr-${{ inputs.image_version }} into main' --body 'Created by Github action'
+      env:
+          GITHUB_TOKEN: ${{ inputs.github_access_token }}
+
+    - uses: actions/checkout@v4
