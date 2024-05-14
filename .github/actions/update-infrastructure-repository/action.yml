@@ -47,6 +47,6 @@ runs:
         git push origin automated-pr-${{ inputs.image_version }}
         gh pr create -B main -H automated-pr-${{ inputs.image_version }} --title 'Merge automated-pr-${{ inputs.image_version }} into main' --body 'Created by Github action'
       env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ inputs.github_access_token }}
 
     - uses: actions/checkout@v4
