@@ -42,15 +42,15 @@ runs:
     - name: Commit and push changes to infrastructure repository
       shell: bash
       run: |
-        git branch automated-pr-${{ inputs.image_version }}
-        git checkout automated-pr-${{ inputs.image_version }}
+        git branch automated-pr-${{inputs.environment}}-${{ inputs.image_version }}
+        git checkout automated-pr-${{inputs.environment}}-${{ inputs.image_version }}
         git config --local user.email ${{inputs.github_application_repo_commit_user_email}}
         git config --local user.name ${{inputs.github_application_repo_commit_username}}
         git add charts/${{inputs.environment}}/values.yaml
         git add charts/${{inputs.environment}}/Chart.yaml
         git commit -m "Update image tag to ${{ inputs.image_version }}"
         git push origin automated-pr-${{ inputs.image_version }}
-        gh pr create -B main -H automated-pr-${{ inputs.image_version }} --title 'Merge automated-pr-${{ inputs.image_version }} into main' --body 'Created by Github action'
+        gh pr create -B main -H automated-pr-${{ inputs.image_version }} --title 'Merge automated-pr-${{inputs.environment}}-${{ inputs.image_version }} into main' --body 'Created by Github action'
       env:
           GITHUB_TOKEN: ${{ inputs.github_access_token }}
 
