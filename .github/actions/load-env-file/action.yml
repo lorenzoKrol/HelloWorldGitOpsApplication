@@ -65,8 +65,8 @@ runs:
           echo "environment=${{ env.ENVIRONMENT }}" >> "$GITHUB_OUTPUT"
           echo "github_infra_repo_username=${{ env.GITHUB_INFRA_REPO_USERNAME }}" >> "$GITHUB_OUTPUT"
           echo "github_infra_repo_name=${{ env.GITHUB_INFRA_REPO_NAME }}" >> "$GITHUB_OUTPUT"
-          echo "github_application_repo_commit_username=${{ env.GITHUB_APPLICATION_REPO_COMMIT_USERNAME_PROD }}" >> "$GITHUB_OUTPUT"
-          echo "github_application_repo_commit_user_email=${{ env.GITHUB_APPLICATION_REPO_COMMIT_USER_EMAIL_PROD }}" >> "$GITHUB_OUTPUT"
+          echo "github_application_repo_commit_username=${{ env.GITHUB_APPLICATION_REPO_COMMIT_USERNAME }}" >> "$GITHUB_OUTPUT"
+          echo "github_application_repo_commit_user_email=${{ env.GITHUB_APPLICATION_REPO_COMMIT_USER_EMAIL }}" >> "$GITHUB_OUTPUT"
           echo "original_image_repository=${{ env.ORIGINAL_IMAGE_REPOSITORY }}" >> "$GITHUB_OUTPUT"
           echo "target_image_repository=${{ env.TARGET_IMAGE_REPOSITORY }}" >> "$GITHUB_OUTPUT"
         else
