@@ -50,7 +50,7 @@ runs:
         git add charts/${{inputs.environment}}/Chart.yaml
         git commit -m "Update image tag to ${{ inputs.image_version }}"
         git push origin automated-pr-${{inputs.environment}}-${{ inputs.image_version }}
-        gh pr create -B main -H automated-pr-${{ inputs.image_version }} --title 'Merge automated-pr-${{inputs.environment}}-${{ inputs.image_version }} into main' --body 'Created by Github action'
+        gh pr create -B main -H automated-pr-${{inputs.environment}}-${{ inputs.image_version }} --title 'Merge automated-pr-${{inputs.environment}}-${{ inputs.image_version }} into main' --body 'Created by Github action'
       env:
           GITHUB_TOKEN: ${{ inputs.github_access_token }}
 
