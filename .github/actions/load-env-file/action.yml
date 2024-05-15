@@ -62,7 +62,7 @@ runs:
           echo "image_name=${{ env.IMAGE_NAME }}" >> "$GITHUB_OUTPUT"
         elif [ "${{ inputs.mode }}" == "acceptance" ]; then
           # Acceptance mode specific actions
-          echo "environment=${{ env.ENVIRONMENT_PROD }}" >> "$GITHUB_OUTPUT"
+          echo "environment=${{ env.ENVIRONMENT }}" >> "$GITHUB_OUTPUT"
           echo "github_infra_repo_username=${{ env.GITHUB_INFRA_REPO_USERNAME }}" >> "$GITHUB_OUTPUT"
           echo "github_infra_repo_name=${{ env.GITHUB_INFRA_REPO_NAME }}" >> "$GITHUB_OUTPUT"
           echo "github_application_repo_commit_username=${{ env.GITHUB_APPLICATION_REPO_COMMIT_USERNAME_PROD }}" >> "$GITHUB_OUTPUT"
