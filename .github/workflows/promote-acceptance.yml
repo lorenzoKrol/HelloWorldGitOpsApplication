@@ -14,6 +14,7 @@ jobs:
         run: |
           echo $RELEASE_VERSION
           echo ${{ env.RELEASE_VERSION }}
+
 #  extract_tag:
 #    if: github.event.pull_request.merged == true
 #    runs-on: ubuntu-latest
