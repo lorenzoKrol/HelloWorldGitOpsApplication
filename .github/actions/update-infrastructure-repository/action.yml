@@ -29,7 +29,6 @@ runs:
       uses: actions/checkout@v4
       with:
         repository: ${{inputs.github_infra_repo_username}}/${{inputs.github_infra_repo_name}}
-        token: ${{ inputs.github_access_token }}
 
     - name: Update image tag in values.yaml
       shell: bash
