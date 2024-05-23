@@ -1,4 +1,4 @@
-name: Promote acceptance workflow
+name: Promote production workflow
 
 on:
   release:
