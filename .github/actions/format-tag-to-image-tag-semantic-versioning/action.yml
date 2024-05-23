@@ -1,0 +1,19 @@
+name: Format extracted tag
+description: Formats the tag to the image tag
+inputs:
+  tag_to_format:
+    description: 'The tag to format'
+    required: true
+outputs:
+  tag:
+    description: "The formatted tag"
+    value: ${{ steps.tag.outputs.tag }}
+runs:
+  using: "composite"
+  steps:
+    - name: format tag
+      id: tag
+      shell: bash
+      run: |
+        TAG=${{ inputs.tag_to_format }}
+        echo "tag=${TAG#v}" >> $GITHUB_OUTPUT
