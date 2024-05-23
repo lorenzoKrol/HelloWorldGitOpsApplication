@@ -77,7 +77,7 @@ jobs:
           github_infra_repo_name: ${{needs.load-env-file.outputs.github_infra_repo_name}}
           github_application_repo_commit_username: ${{needs.load-env-file.outputs.github_application_repo_commit_username}}
           github_application_repo_commit_user_email: ${{needs.load-env-file.outputs.github_application_repo_commit_user_email}}
-          github_access_token: ${{ secrets.GHA_TOKEN }}
+          github_access_token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
           image_version: ${{ needs.calculate-version.outputs.version }}
 
 
