@@ -7,15 +7,7 @@ on:
       - '.github/**'
       - 'metrics/**'
 
-jobs:  
-  extract_tag_test:
-    runs-on: ubuntu-latest
-    outputs:
-      tag: ${{ steps.tag.outputs.tag_version }}
-    steps:
-      - uses: actions/checkout@v4
-      - uses: ./.github/actions/extract-tag
-
+jobs:
   load-env-file:
     runs-on: ubuntu-latest
     outputs:
@@ -34,21 +26,6 @@ jobs:
         with:
           path: ./pipeline_env_variables
           mode: development
-
-  calculate-metrics:
-    runs-on: ubuntu-latest
-    needs: [load-env-file]
-    environment: development
-    if: ${{ needs.load-env-file.outputs.dora_metrics == 'TRUE' }}
-    steps:
-      - uses: actions/checkout@v4
-      - name: Update image tag in infrastructure repository
-        uses: ./.github/actions/dora-metrics
-        with:
-          github_application_repo_commit_username: ${{needs.load-env-file.outputs.github_application_repo_commit_username}}
-          github_application_repo_commit_user_email: ${{needs.load-env-file.outputs.github_application_repo_commit_user_email}}
-          github_access_token: ${{ secrets.GHA_TOKEN }}
-          branch: ${{ github.ref_name }}
 
   calculate-version:
     runs-on: ubuntu-latest
