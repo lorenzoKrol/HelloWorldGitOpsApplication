@@ -47,8 +47,8 @@ jobs:
       - name: push to image registry
         uses: ./.github/actions/promote-image
         with:
-          docker_username: ${{ secrets.IMAGE_REPOSITORY_USERNAME }}
-          docker_password: ${{ secrets.IMAGE_REPOSITORY_PASSWORD }}
+          image_repository_username: ${{ secrets.IMAGE_REPOSITORY_USERNAME }}
+          image_repository_password: ${{ secrets.IMAGE_REPOSITORY_PASSWORD }}
           image_version: ${{ needs.format_tag.outputs.tag }}
           original_image_repository: ${{needs.load-env-file.outputs.original_image_repository}}
           target_image_repository: ${{needs.load-env-file.outputs.target_image_repository}}
