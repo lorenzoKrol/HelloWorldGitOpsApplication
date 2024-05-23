@@ -2,18 +2,18 @@ name: Promote accpetance workflow
 
 on:
   release:
-    types: [prereleased]
+    types: [ prereleased ]
 jobs:
-  - test:
-      runs-on: ubuntu-latest
-      steps:
-        - uses: actions/checkout@v2
-        - name: Set env
-          run: echo "RELEASE_VERSION=${{github.event.release.tag_name}}" >> $GITHUB_ENV
-        - name: Test
-          run: |
-            echo $RELEASE_VERSION
-            echo ${{ env.RELEASE_VERSION }}
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set env
+        run: echo "RELEASE_VERSION=${{github.event.release.tag_name}}" >> $GITHUB_ENV
+      - name: Test
+        run: |
+          echo $RELEASE_VERSION
+          echo ${{ env.RELEASE_VERSION }}
 #  extract_tag:
 #    if: github.event.pull_request.merged == true
 #    runs-on: ubuntu-latest
