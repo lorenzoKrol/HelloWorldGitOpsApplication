@@ -48,8 +48,8 @@ jobs:
       - name: Build
         uses: ./.github/actions/build-image
         with:
-          docker_username: ${{ secrets.DOCKER_USERNAME }}
-          docker_password: ${{ secrets.DOCKER_PASSWORD }}
+          docker_username: ${{ secrets.IMAGE_REPOSITORY_USERNAME }}
+          docker_password: ${{ secrets.IMAGE_REPOSITORY_PASSWORD }}
 
   push:
     runs-on: ubuntu-latest
@@ -60,8 +60,8 @@ jobs:
         uses: ./.github/actions/push-image
         with:
           image_name: ${{needs.load-env-file.outputs.image_name}}
-          docker_username: ${{ secrets.DOCKER_USERNAME }}
-          docker_password: ${{ secrets.DOCKER_PASSWORD }}
+          docker_username: ${{ secrets.IMAGE_REPOSITORY_USERNAME }}
+          docker_password: ${{ secrets.IMAGE_REPOSITORY_PASSWORD }}
           image_version: ${{ needs.calculate-version.outputs.version }}
 
   update-helm-values:
