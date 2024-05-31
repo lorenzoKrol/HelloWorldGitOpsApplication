@@ -10,11 +10,11 @@ inputs:
   image_version:
     description: "Version of the image that is going to be promoted"
     required: true
-  original_image_repository:
-    description: "Name of the repository where the image is going to be promoted from"
+  original_image:
+    description: "Name of the image that is going to be promoted"
     required: true
-  target_image_repository:
-    description: "Name of the repository where the image is going to be promoted to"
+  target_image:
+    description: "Name of the new image that is going to be promoted"
     required: true
   registry:
     description: "Registry to push the image to"
@@ -35,9 +35,9 @@ runs:
     - name: Pull and push image from source registry
       shell: bash
       run: |
-        docker pull ghcr.io/lorenzokrol/${{ inputs.original_image_repository }}:${{ inputs.image_version }}
-        docker image tag ghcr.io/lorenzokrol/${{ inputs.original_image_repository }}:${{ inputs.image_version }} ghcr.io/lorenzokrol/${{ inputs.target_image_repository }}:${{ inputs.image_version }}
-        docker push ghcr.io/lorenzokrol/${{ inputs.target_image_repository }}:${{ inputs.image_version }}
+        docker pull ${{ inputs.original_image }}:${{ inputs.image_version }}
+        docker image tag ${{ inputs.original_image }}:${{ inputs.image_version }} ${{ inputs.target_image }}:${{ inputs.image_version }}
+        docker push ${{ inputs.target_image }}:${{ inputs.image_version }}
 
 
       
