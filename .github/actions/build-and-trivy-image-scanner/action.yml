@@ -41,11 +41,6 @@ runs:
         load: true
         tags: ${{inputs.image_name}}:${{ inputs.image_version }}
         push: false
-    - id: get-build-name
-      shell: bash
-      run: |
-        imageName=${{ fromJSON(steps.docker-push.outputs.metadata)['image.name'] }}
-        echo "::set-output name=image_name::$imageName"
     - name: Run Trivy vulnerability scanner
       uses: aquasecurity/trivy-action@master
       with:
