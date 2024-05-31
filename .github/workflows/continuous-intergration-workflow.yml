@@ -62,8 +62,8 @@ jobs:
         with:
           registry: https://ghcr.io
           image_name: ${{needs.load-env-file.outputs.image_name}}
-          image_repository_username: ${{ secrets.IMAGE_REPOSITORY_USERNAME }}
-          image_repository_password: ${{ secrets.IMAGE_REPOSITORY_PASSWORD }}
+          image_repository_username: ${{ github.actor }}
+          image_repository_password: ${{ secrets.GITHUB_TOKEN }}
           image_version: ${{ needs.calculate-version.outputs.version }}
 
   update-helm-values:

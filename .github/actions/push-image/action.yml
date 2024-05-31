@@ -40,4 +40,4 @@ runs:
         context: .
         file: ./Dockerfile
         push: true
-        tags: ${{ inputs.image_repository_username }}/${{inputs.image_name}}:${{ inputs.image_version }}
+        tags: lorenzoKrol/${{inputs.image_name}}:${{ inputs.image_version }}
