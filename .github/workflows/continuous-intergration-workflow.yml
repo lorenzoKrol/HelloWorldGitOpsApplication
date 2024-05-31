@@ -43,7 +43,7 @@ jobs:
 
   build:
     runs-on: ubuntu-latest
-    needs: load-env-file
+    needs: [calculate-version,load-env-file]
     steps:
       - uses: actions/checkout@v4
       - name: Build
