@@ -47,11 +47,13 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Build
-        uses: ./.github/actions/build-image
+        uses: ./.github/actions/build-and-trivy-image-scanner
         with:
           registry: ${{needs.load-env-file.outputs.registry}}
+          image_name: ${{needs.load-env-file.outputs.image_name}}
           image_repository_username: ${{ github.actor }}
           image_repository_password: ${{ secrets.GITHUB_TOKEN }}
+          image_version: ${{ needs.calculate-version.outputs.version }}
 
   push:
     runs-on: ubuntu-latest
