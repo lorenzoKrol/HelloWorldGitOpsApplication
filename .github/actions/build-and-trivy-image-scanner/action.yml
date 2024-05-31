@@ -1,5 +1,5 @@
-name: Trivy security testing infrastructure as code
-description: Trivy security testing infrastructure as code
+name: build and scan
+description: Trivy scan image
 inputs:
   image_name:
     description: "Name of the image that is going to be pushed"
