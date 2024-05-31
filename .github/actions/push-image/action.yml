@@ -40,4 +40,4 @@ runs:
         context: .
         file: ./Dockerfile
         push: true
-        tags: ghcr.io/lorenzoKrol/${{inputs.image_name}}:${{ inputs.image_version }}
+        tags: ghcr.io/lorenzokrol/${{inputs.image_name}}:${{ inputs.image_version }}
