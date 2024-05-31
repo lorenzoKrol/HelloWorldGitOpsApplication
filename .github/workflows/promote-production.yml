@@ -47,8 +47,9 @@ jobs:
       - name: push to image registry
         uses: ./.github/actions/promote-image
         with:
-          image_repository_username: ${{ secrets.IMAGE_REPOSITORY_USERNAME }}
-          image_repository_password: ${{ secrets.IMAGE_REPOSITORY_PASSWORD }}
+          registry: https://ghcr.io
+          image_repository_username: ${{ github.actor }}
+          image_repository_password: ${{ secrets.GITHUB_TOKEN }}
           image_version: ${{ needs.format_tag.outputs.tag }}
           original_image_repository: ${{needs.load-env-file.outputs.original_image_repository}}
           target_image_repository: ${{needs.load-env-file.outputs.target_image_repository}}
@@ -65,5 +66,5 @@ jobs:
           github_infra_repo_name: ${{needs.load-env-file.outputs.github_infra_repo_name}}
           github_application_repo_commit_username: ${{needs.load-env-file.outputs.github_application_repo_commit_username}}
           github_application_repo_commit_user_email: ${{needs.load-env-file.outputs.github_application_repo_commit_user_email}}
-          github_access_token: ${{ secrets.GHA_TOKEN }}
+          github_access_token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
           image_version: ${{ needs.format_tag.outputs.tag }}
