@@ -36,7 +36,7 @@ runs:
       shell: bash
       run: |
         docker pull ghcr.io/lorenzokrol/${{ inputs.original_image_repository }}:${{ inputs.image_version }}
-        docker image tag ghcr.io/lorenzokrol/${{ inputs.original_image_repository }}:${{ inputs.image_version }} ${{ inputs.image_repository_username }}/${{ inputs.target_image_repository }}:${{ inputs.image_version }}
+        docker image tag ghcr.io/lorenzokrol/${{ inputs.original_image_repository }}:${{ inputs.image_version }} ghcr.io/lorenzokrol//${{ inputs.target_image_repository }}:${{ inputs.image_version }}
         docker push ghcr.io/lorenzokrol/${{ inputs.target_image_repository }}:${{ inputs.image_version }}
 
 
