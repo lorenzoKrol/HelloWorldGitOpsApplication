@@ -51,7 +51,7 @@ jobs:
         with:
           registry: ${{needs.load-env-file.outputs.registry}}
           image_name: ${{needs.load-env-file.outputs.image_name}}
-          image_repository_username: ${{ github.actor }}
+          image_repository_username: ${{ secrets.IMAGE_REPOSITORY_USERNAME }}
           image_repository_password: ${{ secrets.GITHUB_TOKEN }}
           image_version: ${{ needs.calculate-version.outputs.version }}
 
@@ -65,7 +65,7 @@ jobs:
         with:
           registry: ${{needs.load-env-file.outputs.registry}}
           image_name: ${{needs.load-env-file.outputs.image_name}}
-          image_repository_username: ${{ github.actor }}
+          image_repository_username: ${{ secrets.IMAGE_REPOSITORY_USERNAME }}
           image_repository_password: ${{ secrets.GITHUB_TOKEN }}
           image_version: ${{ needs.calculate-version.outputs.version }}
 
