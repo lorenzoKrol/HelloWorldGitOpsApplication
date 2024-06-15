@@ -42,7 +42,7 @@ runs:
     - name: Commit and push changes to infrastructure repository
       shell: bash
       run: |
-        git branch automated-pr-${{inputs.environment}}-${{ inputs.image_version }}
+        git branc automated-pr-${{inputs.environment}}-${{ inputs.image_version }}
         git checkout automated-pr-${{inputs.environment}}-${{ inputs.image_version }}
         git config --local user.email ${{inputs.github_application_repo_commit_user_email}}
         git config --local user.name ${{inputs.github_application_repo_commit_username}}
